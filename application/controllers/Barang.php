@@ -1,30 +1,28 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Karyawan extends CI_Controller
+class Barang extends CI_Controller
 {
 
     public function index()
     {
         $data = [
-            'title' => 'Data Karyawan',
+            'title' => 'Data Barang',
             'user' => $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row(),
-            'karyawan' => $this->db->query("SELECT * FROM karyawan as a
-            left join departemen as b on b.id_departemen = a.id_departemen
-            ORDER BY a.id_karyawan DESC")->result(),
+            'barang' => $this->db->query("SELECT * FROM barang ORDER BY id_barang DESC")->result(),
             'departemen' => $this->db->get('departemen')->result()
         ];
 
         $this->load->view('template/head', $data);
         $this->load->view('template/navbar', $data);
         $this->load->view('template/sidebar', $data);
-        $this->load->view('karyawan/index', $data);
+        $this->load->view('barang/index', $data);
         $this->load->view('template/footer', $data);
     }
 
     public function add()
     {
-        $config['upload_path'] = './assets/karyawan/'; // Ganti dengan path folder upload sesuai dengan struktur folder Anda
+        $config['upload_path'] = './assets/barang/'; // Ganti dengan path folder upload sesuai dengan struktur folder Anda
         $config['allowed_types'] = 'gif|jpg|png'; // Jenis file yang diizinkan untuk diunggah (sesuaikan sesuai kebutuhan)
         $config['max_size'] = 10000; // Ukuran maksimum file dalam kilobyte (KB)
 
@@ -44,18 +42,15 @@ class Karyawan extends CI_Controller
             $file_size = $upload_data['file_size']; // Ukuran file dalam byte
 
             $data = array(
-                'nm_karyawan' => $this->input->post('nm_karyawan'),
-                'tgl_lahir' => $this->input->post('tgl_lahir'),
-                'jenis_kelamin' => $this->input->post('jenis_kelamin'),
-                'id_departemen' => $this->input->post('id_departemen'),
-                'tgl_bergabung' => $this->input->post('tgl_bergabung'),
-                'alamat' => $this->input->post('alamat'),
-                'foto' => $file_name // Simpan nama file ke kolom 'foto'
+                'nm_barang' => $this->input->post('nm_barang'),
+                'harga' => $this->input->post('harga'),
+                'stok' => $this->input->post('stok'),
+                'image' => $file_name // Simpan nama file ke kolom 'foto'
             );
 
-            $this->db->insert('karyawan', $data);
+            $this->db->insert('barang', $data);
             $this->session->set_flashdata('success', 'Berhasil disimpan');
-            redirect('karyawan');
+            redirect('barang');
         }
     }
     public function edit()
