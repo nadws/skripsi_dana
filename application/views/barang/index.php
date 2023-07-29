@@ -26,7 +26,7 @@
                       <div class="card">
                           <div class="card-header">
                               <h6 class="float-left"><?= $title ?></h6>
-                              <button class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#tambah_data">Tambah Karyawan</button>
+                              <button class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#tambah_data">Tambah Barang</button>
                           </div>
                           <div class="card-body">
                               <table id="example2" class="table table-bordered table-striped">
