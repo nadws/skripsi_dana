@@ -6,11 +6,25 @@ class Barang extends CI_Controller
 
     public function index()
     {
+        $kode =  $this->db->query("SELECT max(a.urutan) as urutan_kode FROM barang as a")->row();
+        if (empty($kode->urutan_kode)) {
+           $kode_barang = '1001';
+        } else {
+            $kode_barang = $kode->urutan_kode + 1;
+        }
+        
         $data = [
             'title' => 'Data Barang',
             'user' => $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row(),
-            'barang' => $this->db->query("SELECT * FROM barang ORDER BY id_barang DESC")->result(),
-            'departemen' => $this->db->get('departemen')->result()
+            'barang' => $this->db->query("SELECT a.*, b.masuk, b.keluar FROM barang as a
+            left join(
+                SELECT b.kode_barang, sum(b.masuk) as masuk , sum(b.keluar) as keluar
+                FROM stok as b 
+                group by b.kode_barang
+            ) as b on b.kode_barang = a.kode
+             ORDER BY a.id_barang DESC")->result(),
+            'departemen' => $this->db->get('departemen')->result(),
+            'kode' =>  $kode_barang
         ];
 
         $this->load->view('template/head', $data);
@@ -42,13 +56,20 @@ class Barang extends CI_Controller
             $file_size = $upload_data['file_size']; // Ukuran file dalam byte
 
             $data = array(
+                'kode' => $this->input->post('kode_barang'),
                 'nm_barang' => $this->input->post('nm_barang'),
                 'harga' => $this->input->post('harga'),
                 'stok' => $this->input->post('stok'),
                 'image' => $file_name // Simpan nama file ke kolom 'foto'
             );
-
             $this->db->insert('barang', $data);
+            $data = [
+                'kode_barang' => $this->input->post('kode_barang'),
+                'masuk' => $this->input->post('stok'),
+                'keluar' => '0',
+                'ket' => 'Stok awal'
+            ];
+            $this->db->insert('stok', $data);
             $this->session->set_flashdata('success', 'Berhasil disimpan');
             redirect('barang');
         }

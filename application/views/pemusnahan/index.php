@@ -26,38 +26,38 @@
                       <div class="card">
                           <div class="card-header">
                               <h6 class="float-left"><?= $title ?></h6>
-                              <button class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#tambah_data">Tambah Barang</button>
+                              <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
+                                  data-target="#tambah_data">Tambah Pemusnahan</button>
                           </div>
                           <div class="card-body">
                               <table id="example2" class="table table-bordered table-striped">
                                   <thead>
                                       <tr>
                                           <th>No</th>
-                                          <th>Kode Barang</th>
                                           <th>Nama Barang</th>
-                                          <th class="text-right">Stok</th>
-                                          <th class="text-right">Harga</th>
-                                          <!-- <th>Foto</th> -->
-                                          <th class="text-center">Aksi</th>
+                                          <th>Qty</th>
+                                          <th>Tgl Pemusnahan</th>
+                                          <th>Alasan</th>
+                                          <th>Aksi</th>
                                       </tr>
                                   </thead>
                                   <tbody>
-                                      <?php foreach ($barang as $no => $c) : ?>
-                                          <tr>
-                                              <td><?= $no + 1 ?></td>
-                                              <td><?= $c->kode ?></td>
-                                              <td><?= $c->nm_barang ?></td>
-                                              <td align="right"><?= $c->masuk - $c->keluar ?></td>
-                                              <td align="right">Rp. <?= number_format($c->harga, 0) ?></td>
-                                              <!-- <td align="center">
-                                                  <a target="_blank" href="<?= base_url("assets/barang/$c->image") ?>"><img src="<?= base_url("assets/barang/$c->image") ?>" alt="" width="80px"></a>
-                                              </td> -->
-                                              <td align="center">
-                                                  <a href="#" data-toggle="modal" data-target="#view_data<?= $c->id_barang ?>" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
-                                                  <a href="#" data-toggle="modal" data-target="#edit_data<?= $c->id_barang ?>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                                                  <a href="<?= base_url("karyawan/delete?id_karyawan=$c->id_barang") ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
-                                              </td>
-                                          </tr>
+                                      <?php foreach ($inventaris as $no => $c) : ?>
+                                      <tr>
+                                          <td><?= $no + 1 ?></td>
+                                          <td><?= $c->nm_barang ?></td>
+                                          <td><?= $c->qty ?></td>
+                                          <td><?= date('d-m-Y',strtotime($c->tgl_pemusnahan))  ?></td>
+                                          <td><?= $c->ket ?></td>
+                                          <td>
+                                          <a href="#" data-toggle="modal"
+                                                  data-target="#edit_data<?= $c->id_pemusnahan_barang ?>"
+                                                  class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                                              <a href="<?= base_url("karyawan/delete?id_karyawan=$c->id_pemusnahan_barang")
+                                                  ?>"
+                                                  class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a> 
+                                          </td>
+                                      </tr>
                                       <?php endforeach ?>
                                   </tbody>
                               </table>
@@ -67,7 +67,7 @@
 
                   </div>
 
-                  <form action="<?= base_url('barang/add') ?>" method="post" enctype="multipart/form-data">
+                  <form action="<?= base_url('pemusnahan_barang/add') ?>" method="post" >
                       <div class="modal fade" id="tambah_data">
                           <div class="modal-dialog modal-lg">
                               <div class="modal-content">
@@ -80,33 +80,59 @@
                                   <div class="modal-body">
                                       <div class="row">
                                           <div class="col-lg-4">
-                                              <label for="">Kode barang</label>
-                                              <input type="text" class="form-control" name="kode_barang" readonly value="BR-<?= $kode ?>">
-                                          </div>
-                                          <div class="col-lg-4">
                                               <label for="">Nama barang</label>
-                                              <input type="text" class="form-control" name="nm_barang">
+                                              <select name="id_barang" class="form-control" id="">
+                                                  <option value="">-Pilih Barang-</option>
+                                                <?php foreach($barang as $b): ?>
+                                                    <option value="<?= $b->id_barang ?>"><?= $b->nm_barang ?></option>
+                                                    <?php endforeach ?>
+                                              </select>
                                           </div>
-                                          <div class="col-lg-4">
-                                              <label for="">Harga</label>
-                                              <input type="text" class="form-control" name="harga">
+                                          <div class="col-lg-2">
+                                              <label for="">Qty</label>
+                                              <input type="text" class="form-control" name="qty">
                                           </div>
-                                          <div class="col-lg-4 mt-2">
-                                              <label for="">Stok Awal</label>
-                                              <input type="text" class="form-control" name="stok">
+                                          <div class="col-lg-3">
+                                              <label for="">Tanggal Pemusnahan</label>
+                                              <input type="date" class="form-control" name="tgl_pemusnahan">
                                           </div>
-                                          <div class="col-lg-4 mt-2">
-                                            <label for="">Foto</label>
-                                              <img id="previewFoto" src="" alt="Preview Foto" style="max-width: 100%; max-height: 200px; display: none;">
-                                              <input type="file" class="form-control" name="foto" id="inputFoto">
+                                          <div class="col-lg-3">
+                                              <label for="">Alasan dimusnahkan</label>
+                                              <input type="text" class="form-control" name="ket">
                                           </div>
-
-
                                       </div>
                                   </div>
                                   <div class="modal-footer justify-content-between">
                                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                       <button type="submit" class="btn btn-primary">Simpan</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+                  <form action="<?= base_url('Perbaikan_barang/selesai') ?>" method="post" >
+                      <div class="modal fade" id="selesai">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h4 class="modal-title">Pengembalian Barang</h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            Apakah perbaikan barang sudah selesai ?
+                                        </div>
+                                    </div>
+                                    <input type="hidden" class="id_perbaikan_barang" name="id_perbaikan_barang">
+                                     
+                                  </div>
+                                  <div class="modal-footer justify-content-between">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+                                      <button type="submit" class="btn btn-primary">Selesai</button>
                                   </div>
                               </div>
                           </div>
@@ -154,26 +180,15 @@
       <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+  <script src="<?= base_url('assets/') ?>plugins/jquery/jquery.min.js"></script>
   <script>
-      // Mengambil elemen input file dan elemen img untuk preview
-      const inputFoto = document.getElementById('inputFoto');
-      const previewFoto = document.getElementById('previewFoto');
+      $(document).ready(function() {
+        $(document).on('click', '.selesai', function() {
+            id_perbaikan_barang = $(this).attr('id_perbaikan_barang');
+            
+            $('.id_perbaikan_barang').val(id_perbaikan_barang);
+            $("#selesai").modal('show');
 
-      // Event listener untuk saat gambar dipilih
-      inputFoto.addEventListener('change', function() {
-          // Cek apakah ada file yang dipilih
-          if (this.files && this.files[0]) {
-              const reader = new FileReader();
-
-              // Event listener untuk saat gambar selesai di-load
-              reader.addEventListener('load', function(e) {
-                  // Mengganti atribut src dari elemen img dengan data URL gambar yang sudah di-load
-                  previewFoto.src = e.target.result;
-                  previewFoto.style.display = 'block'; // Menampilkan gambar
-              });
-
-              // Membaca data gambar sebagai URL data (data URL)
-              reader.readAsDataURL(this.files[0]);
-          }
+        });
       });
   </script>

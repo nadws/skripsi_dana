@@ -36,7 +36,7 @@
             </p>
           </a>
         </li>
-        <?php $menu1 = ['cabang', 'departemen', 'karyawan', 'barang'] ?>
+        <?php $menu1 = ['cabang', 'departemen', 'karyawan', 'barang','vendor'] ?>
         <li class="nav-item  <?= (in_array($this->uri->segment(1), $menu1)) ? 'menu-open' : ''; ?>">
           <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu1)) ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-laptop-house"></i>
@@ -70,10 +70,17 @@
                 <p>Barang</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="<?= base_url('vendor') ?>" class="nav-link <?= ($this->uri->segment(1) == 'vendor') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Vendor</p>
+              </a>
+            </li>
           </ul>
         </li>
-        <li class="nav-item tmenu-open">
-          <a href="#" class="nav-link tactive">
+        <?php $menu2 = ['inventaris_pinjam','perbaikan_barang','Pemusnahan_barang'] ?>
+        <li class="nav-item <?= (in_array($this->uri->segment(1), $menu2)) ? 'menu-open' : ''; ?>">
+          <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu2)) ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-clipboard-list"></i>
             <p>
               Data Kegitan
@@ -82,25 +89,20 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link tactive">
+              <a href="<?= base_url('inventaris_pinjam') ?>" class="nav-link <?= ($this->uri->segment(1) == 'inventaris_pinjam') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Inventaris yang dipinjam</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="<?= base_url('perbaikan_barang') ?>" class="nav-link <?= ($this->uri->segment(1) == 'perbaikan_barang') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Perbaikan barang</p>
               </a>
             </li>
+            
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Vendor</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="<?= base_url('Pemusnahan_barang') ?>" class="nav-link <?= ($this->uri->segment(1) == 'Pemusnahan_barang') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pemusnahan barang</p>
               </a>
