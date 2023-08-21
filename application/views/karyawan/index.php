@@ -33,7 +33,9 @@
                   <thead>
                     <tr>
                       <th>No</th>
+                      <th>NIK</th>
                       <th>Nama</th>
+                      <th>Posisi</th>
                       <th>Tanggal lahir</th>
                       <th>Jenis Kelamin</th>
                       <th>Lama Bekerja</th>
@@ -45,8 +47,10 @@
                     <?php foreach ($karyawan as $no => $c) : ?>
                       <tr>
                         <td><?= $no + 1 ?></td>
+                        <td><?= $c->nik ?></td>
                         <td><?= $c->nm_karyawan ?></td>
-                        <td><?= $c->tgl_lahir ?></td>
+                        <td><?= $c->nm_level ?></td>
+                        <td><?=date('d-m-Y',strtotime($c->tgl_lahir))  ?></td>
                         <td><?= $c->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' ?></td>
                         <td>
                           <?php $lahir    = new DateTime($c->tgl_bergabung);
@@ -83,15 +87,28 @@
                   </div>
                   <div class="modal-body">
                     <div class="row">
-                      <div class="col-lg-3">
+                      <div class="col-lg-4">
+                        <label for="">NIK</label>
+                        <input type="text" class="form-control" name="nik" value="KRY-<?= $nik ?>" readonly>
+                      </div>
+                      <div class="col-lg-4">
+                        <label for="">Level Karyawan</label>
+                        <select name="id_level_karyawan" id="" class="form-control">
+                          <option value="">-Pilih-</option>
+                          <?php foreach ($level as $d) : ?>
+                            <option value="<?= $d->id_level_karyawan ?>"><?= $d->nm_level ?></option>
+                          <?php endforeach ?>
+                        </select>
+                      </div>
+                      <div class="col-lg-4">
                         <label for="">Nama Karyawan</label>
                         <input type="text" class="form-control" name="nm_karyawan">
                       </div>
-                      <div class="col-lg-3">
+                      <div class="col-lg-4 mt-2">
                         <label for="">Tanggal lahir</label>
                         <input type="date" class="form-control" name="tgl_lahir">
                       </div>
-                      <div class="col-lg-3">
+                      <div class="col-lg-4 mt-2">
                         <label for="">Jenis Kelaim</label>
                         <select name="jenis_kelamin" id="" class="form-control">
                           <option value="">-Pilih-</option>
@@ -99,7 +116,7 @@
                           <option value="P">Perempuan</option>
                         </select>
                       </div>
-                      <div class="col-lg-3">
+                      <div class="col-lg-4 mt-2">
                         <label for="">Departemen</label>
                         <select name="id_departemen" id="" class="form-control">
                           <option value="">-Pilih-</option>
@@ -114,11 +131,7 @@
                       </div>
                       <div class="col-lg-8 mt-2">
                         <label for="">Alamat</label>
-                        <input type="text" name="alamat" class="form-control">
-                      </div>
-                      <div class="col-lg-4 mt-2">
-                        <img id="previewFoto" src="" alt="Preview Foto" style="max-width: 100%; max-height: 200px; display: none;">
-                        <input type="file" class="form-control" name="foto" id="inputFoto">
+                        <textarea class="form-control" name="alamat" rows="8" cell="30"></textarea>
                       </div>
 
 

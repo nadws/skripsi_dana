@@ -9,7 +9,7 @@ class Perbaikan_barang extends CI_Controller {
             'title'=> 'Data Perbaikan Barang',
             'user' => $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row(),
             'inventaris' => $this->db->query("SELECT * FROM perbaikan_barang as a
-            left join barang as b on b.id_barang = a.id_barang
+            left join barang as b on b.kode = a.kode_barang
             ORDER BY a.id_perbaikan_barang DESC")->result(),
             'barang' => $this->db->get('barang')->result(),
         ];
@@ -36,7 +36,7 @@ class Perbaikan_barang extends CI_Controller {
     public function add()
     {
        $data = [
-        'id_barang' => $this->input->post('id_barang'),
+        'kode_barang' => $this->input->post('kode_barang'),
         'qty' => $this->input->post('qty'),
         'tgl_perbaikan' => $this->input->post('tgl_perbaikan'),
         'ket' => $this->input->post('ket'),

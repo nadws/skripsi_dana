@@ -68,6 +68,16 @@
             title: '<?= $this->session->flashdata('success') ?>'
         });
     <?php endif; ?>
+  <?php if ($this->session->flashdata('error')) : ?>
+        Swal.fire({
+            // toast: true,
+            position: 'center',
+            showConfirmButton: false,
+            timer: 3000,
+            icon: 'error',
+            title: '<?= $this->session->flashdata('error') ?>'
+        });
+    <?php endif; ?>
 </script>
 </body>
 </html>

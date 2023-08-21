@@ -81,10 +81,10 @@
                                       <div class="row">
                                           <div class="col-lg-4">
                                               <label for="">Nama barang</label>
-                                              <select name="id_barang" class="form-control" id="">
+                                              <select name="kode_barang" class="form-control" id="">
                                                   <option value="">-Pilih Barang-</option>
                                                 <?php foreach($barang as $b): ?>
-                                                    <option value="<?= $b->id_barang ?>"><?= $b->nm_barang ?></option>
+                                                    <option value="<?= $b->kode ?>">(<?= $b->kode ?>)<?= $b->nm_barang ?></option>
                                                     <?php endforeach ?>
                                               </select>
                                           </div>

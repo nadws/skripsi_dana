@@ -6,13 +6,23 @@ class Karyawan extends CI_Controller
 
     public function index()
     {
+        $urutan = $this->db->query("SELECT max(a.urutan) as urutan FROM karyawan as a")->row();
+        if (empty($urutan->urutan)) {
+            $kode = '5001';
+        } else {
+            $kode = $urutan->urutan + 1;
+        }
+        
         $data = [
             'title' => 'Data Karyawan',
             'user' => $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row(),
             'karyawan' => $this->db->query("SELECT * FROM karyawan as a
             left join departemen as b on b.id_departemen = a.id_departemen
+            left join level_karyawan as c on c.id_level_karyawan = a.id_level_karyawan
             ORDER BY a.id_karyawan DESC")->result(),
-            'departemen' => $this->db->get('departemen')->result()
+            'departemen' => $this->db->get('departemen')->result(),
+            'nik' => $kode,
+            'level' => $this->db->get('level_karyawan')->result()
         ];
 
         $this->load->view('template/head', $data);
@@ -24,39 +34,38 @@ class Karyawan extends CI_Controller
 
     public function add()
     {
-        $config['upload_path'] = './assets/karyawan/'; // Ganti dengan path folder upload sesuai dengan struktur folder Anda
-        $config['allowed_types'] = 'gif|jpg|png'; // Jenis file yang diizinkan untuk diunggah (sesuaikan sesuai kebutuhan)
-        $config['max_size'] = 10000; // Ukuran maksimum file dalam kilobyte (KB)
-
-        $this->load->library('upload', $config);
-
-        if (!$this->upload->do_upload('foto')) {
-            // Jika proses upload gagal, tangani kesalahan (misalnya menampilkan pesan error)
-            $error = array('error' => $this->upload->display_errors());
-            print_r($error);
+        $urutan = $this->db->query("SELECT max(a.urutan) as urutan FROM karyawan as a")->row();
+        if (empty($urutan->urutan)) {
+            $kode = '5001';
         } else {
-            // Jika proses upload berhasil, ambil data tentang gambar yang diunggah
-            $upload_data = $this->upload->data();
-
-            // Lakukan sesuatu dengan data gambar yang diunggah (misalnya menyimpan informasi file ke database)
-            $file_name = $upload_data['file_name']; // Nama file yang diunggah
-            $file_type = $upload_data['file_type']; // Tipe file (ekstensi)
-            $file_size = $upload_data['file_size']; // Ukuran file dalam byte
-
-            $data = array(
-                'nm_karyawan' => $this->input->post('nm_karyawan'),
-                'tgl_lahir' => $this->input->post('tgl_lahir'),
-                'jenis_kelamin' => $this->input->post('jenis_kelamin'),
-                'id_departemen' => $this->input->post('id_departemen'),
-                'tgl_bergabung' => $this->input->post('tgl_bergabung'),
-                'alamat' => $this->input->post('alamat'),
-                'foto' => $file_name // Simpan nama file ke kolom 'foto'
-            );
-
-            $this->db->insert('karyawan', $data);
-            $this->session->set_flashdata('success', 'Berhasil disimpan');
-            redirect('karyawan');
+            $kode = $urutan->urutan + 1;
         }
+        $data = [
+            'nik' => $this->input->post('nik'),
+            'nm_karyawan' => $this->input->post('nm_karyawan'),
+            'tgl_lahir' => $this->input->post('tgl_lahir'),
+            'jenis_kelamin' => $this->input->post('jenis_kelamin'),
+            'id_departemen' => $this->input->post('id_departemen'),
+            'tgl_bergabung' => $this->input->post('tgl_bergabung'),
+            'alamat' => $this->input->post('alamat'),
+            'foto' => 'default.png',
+            'id_level_karyawan' => $this->input->post('id_level_karyawan'),
+            'urutan' => $kode
+        ];
+
+        $this->db->insert('karyawan', $data);
+        $data = array(
+            'nama' => $this->input->post('nm_karyawan'),
+            'username' => $this->input->post('nik'),
+            'image' => 'default.png',
+            'password' => password_hash($this->input->post('nik'), PASSWORD_DEFAULT),
+            'id_role' => 2,
+            'is_active' => 1
+        );
+        
+        $this->db->insert('user', $data);
+        $this->session->set_flashdata('success', 'Berhasil disimpan');
+        redirect('karyawan');
     }
     public function edit()
     {

@@ -26,8 +26,12 @@
                       <div class="card">
                           <div class="card-header">
                               <h6 class="float-left"><?= $title ?></h6>
-                              <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
+                              <?php if($user->id_role == 1): ?>
+                                <?php else: ?>
+                                    <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
                                   data-target="#tambah_data">Tambah Peminjaman</button>
+                                    <?php endif ?>
+                              
                           </div>
                           <div class="card-body">
                               <table id="example2" class="table table-bordered table-striped">
@@ -55,15 +59,30 @@
                                           <td><span class="badge <?= $c->status_pinjam == 'dipinjam' ? 'badge-danger' : 'badge-success' ?> "><?= $c->status_pinjam ?></span></td>
                                           <td>
                                             <?php if($c->status_pinjam == 'dipinjam'): ?>
-                                                <a href="#"  class="btn btn-sm btn-success kembali" id_inventaris="<?= $c->id_peminjaman_inv ?>">Mengembalikan</a>
-                                                <a href="#" data-toggle="modal"
-                                                  data-target="#edit_data<?= $c->id_peminjaman_inv ?>"
-                                                  class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                                              <a href="<?= base_url("karyawan/delete?id_karyawan=$c->id_peminjaman_inv")
-                                                  ?>"
-                                                  class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
-                                                <?php else: ?>
+                                                <?php if($user->id_role == 1): ?>
+                                                    <?php if($c->ket == 'setuju'): ?>
+                                                    <?php else: ?>
+                                                            <a href="#"  class="btn btn-sm btn-success setuju" kode_barang="<?= $c->kode_barang ?>" qty="<?= $c->qty ?>" id_inventaris="<?= $c->id_peminjaman_inv ?>">Setujui</a>
+                                                    <?php endif ?>
+                                                   
+
+
+                                                    <a href="#" data-toggle="modal"
+                                                    data-target="#edit_data<?= $c->id_peminjaman_inv ?>"
+                                                    class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                                                    <a href="<?= base_url("karyawan/delete?id_karyawan=$c->id_peminjaman_inv")?>"
+                                                    class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a> 
+                                            <?php else: ?>
+                                                    <a href="#"  class="btn btn-sm btn-success kembali" kode_barang="<?= $c->kode_barang ?>" qty="<?= $c->qty ?>" id_inventaris="<?= $c->id_peminjaman_inv ?>">Mengembalikan</a>
+                                                    <a href="#" data-toggle="modal"
+                                                    data-target="#edit_data<?= $c->id_peminjaman_inv ?>"
+                                                    class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                                                    <a href="<?= base_url("karyawan/delete?id_karyawan=$c->id_peminjaman_inv")?>"
+                                                    class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                                                 <?php endif ?>
+                                                
+                                                <?php else: ?>
+                                            <?php endif ?>
                                               
                                               
                                               
@@ -92,10 +111,10 @@
                                       <div class="row">
                                           <div class="col-lg-4">
                                               <label for="">Nama barang</label>
-                                              <select name="id_barang" class="form-control" id="">
+                                              <select name="kode_barang" class="form-control" id="">
                                                   <option value="">-Pilih Barang-</option>
                                                 <?php foreach($barang as $b): ?>
-                                                    <option value="<?= $b->id_barang ?>"><?= $b->nm_barang ?></option>
+                                                    <option value="<?= $b->kode ?>">(<?= $b->kode ?>)<?= $b->nm_barang ?></option>
                                                     <?php endforeach ?>
                                               </select>
                                           </div>
@@ -109,10 +128,10 @@
                                           </div>
                                           <div class="col-lg-3">
                                               <label for="">Peminjam</label>
-                                              <select name="id_karyawan" class="form-control" id="">
+                                              <select name="nik" class="form-control" id="">
                                                   <option value="">-Pilih Barang-</option>
                                                 <?php foreach($karyawan as $k): ?>
-                                                    <option value="<?= $k->id_karyawan ?>"><?= $k->nm_karyawan ?></option>
+                                                    <option value="<?= $k->nik ?>"><?= $k->nm_karyawan ?></option>
                                                     <?php endforeach ?>
                                               </select>
                                           </div>
@@ -144,6 +163,38 @@
                                         </div>
                                     </div>
                                     <input type="hidden" class="id_inventaris" name="id_peminjaman_inv">
+                                    <input type="hidden" class="qty" name="qty">
+                                    <input type="hidden" class="kode_barang" name="kode_barang">
+                                     
+                                  </div>
+                                  <div class="modal-footer justify-content-between">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+                                      <button type="submit" class="btn btn-primary">Sesuai</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+                  <form action="<?= base_url('inventaris_pinjam/setujui') ?>" method="post" >
+                      <div class="modal fade" id="setujui">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h4 class="modal-title">Pengembalian Barang</h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            Apakah barang yang dikembalikan sudah sesuai ?
+                                        </div>
+                                    </div>
+                                    <input type="hidden" class="id_inventaris" name="id_peminjaman_inv">
+                                    <input type="hidden" class="qty" name="qty">
+                                    <input type="hidden" class="kode_barang" name="kode_barang">
                                      
                                   </div>
                                   <div class="modal-footer justify-content-between">
@@ -201,9 +252,24 @@
       $(document).ready(function() {
         $(document).on('click', '.kembali', function() {
             id_inventaris = $(this).attr('id_inventaris');
+            qty = $(this).attr('qty');
+            kode_barang = $(this).attr('kode_barang');
             
             $('.id_inventaris').val(id_inventaris);
+            $('.qty').val(qty);
+            $('.kode_barang').val(kode_barang);
             $("#kembalikan").modal('show');
+
+        });
+        $(document).on('click', '.setuju', function() {
+            id_inventaris = $(this).attr('id_inventaris');
+            qty = $(this).attr('qty');
+            kode_barang = $(this).attr('kode_barang');
+            
+            $('.id_inventaris').val(id_inventaris);
+            $('.qty').val(qty);
+            $('.kode_barang').val(kode_barang);
+            $("#setujui").modal('show');
 
         });
       });

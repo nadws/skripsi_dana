@@ -3,8 +3,12 @@
   <!-- Brand Logo -->
   <a href="index3.html" class="brand-link">
     <img src="<?= base_url('assets/') ?>dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-    <span class="brand-text font-weight-light">PT.Saba Indomedika</span>
+    <span class="brand-text font- weight-light">PT.Saba Indomedika</span>
   </a>
+
+  <?php 
+  $peminjaman_barang = $this->db->query("SELECT count('a.id_peminjaman_inv') as total_pinjam FROM inventaris_dipinjam as a where a.ket = 'pengajuan'")->row();
+  ?>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -36,8 +40,9 @@
             </p>
           </a>
         </li>
-        <?php $menu1 = ['cabang', 'departemen', 'karyawan', 'barang','vendor'] ?>
-        <li class="nav-item  <?= (in_array($this->uri->segment(1), $menu1)) ? 'menu-open' : ''; ?>">
+        <?php $menu1 = ['cabang', 'departemen', 'barang','vendor','level_karyawan'] ?>
+        <?php if($this->session->userdata('id_role') == '1'): ?>
+          <li class="nav-item  <?= (in_array($this->uri->segment(1), $menu1)) ? 'menu-open' : ''; ?>">
           <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu1)) ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-laptop-house"></i>
             <p>
@@ -59,9 +64,9 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('karyawan') ?>" class="nav-link <?= ($this->uri->segment(1) == 'karyawan') ? 'active' : ''; ?>">
+              <a href="<?= base_url('level_karyawan') ?>" class="nav-link <?= ($this->uri->segment(1) == 'level_karyawan') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Karyawan</p>
+                <p>Level Karyawan</p>
               </a>
             </li>
             <li class="nav-item">
@@ -78,8 +83,13 @@
             </li>
           </ul>
         </li>
-        <?php $menu2 = ['inventaris_pinjam','perbaikan_barang','Pemusnahan_barang'] ?>
-        <li class="nav-item <?= (in_array($this->uri->segment(1), $menu2)) ? 'menu-open' : ''; ?>">
+        <?php else: ?>
+        <?php endif ?>
+
+       
+        <?php $menu2 = ['inventaris_pinjam','perbaikan_barang','karyawan','Pemusnahan_barang','opname','stok_masuk'] ?>
+        <?php if($this->session->userdata('id_role') == '1'): ?>
+          <li class="nav-item <?= (in_array($this->uri->segment(1), $menu2)) ? 'menu-open' : ''; ?>">
           <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu2)) ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-clipboard-list"></i>
             <p>
@@ -89,9 +99,19 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
+              <a href="<?= base_url('karyawan') ?>" class="nav-link <?= ($this->uri->segment(1) == 'karyawan') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Karyawan</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="<?= base_url('inventaris_pinjam') ?>" class="nav-link <?= ($this->uri->segment(1) == 'inventaris_pinjam') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Inventaris yang dipinjam</p>
+                <p>Peminjaman barang</p>
+                <?php if($peminjaman_barang->total_pinjam == 0): ?>
+                <?php else: ?>
+                    <span class="badge badge-danger  right"><?= $peminjaman_barang->total_pinjam ?></span>
+                <?php endif ?>
               </a>
             </li>
             <li class="nav-item">
@@ -107,8 +127,59 @@
                 <p>Pemusnahan barang</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="<?= base_url('opname') ?>" class="nav-link <?= ($this->uri->segment(1) == 'opname') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Opname barang</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?= base_url('stok_masuk') ?>" class="nav-link <?= ($this->uri->segment(1) == 'stok_masuk') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Stok Masuk</p>
+              </a>
+            </li>
           </ul>
         </li>
+        <?php else: ?>
+          <li class="nav-item <?= (in_array($this->uri->segment(1), $menu2)) ? 'menu-open' : ''; ?>">
+          <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu2)) ? 'active' : ''; ?>">
+            <i class="nav-icon fas fa-clipboard-list"></i>
+            <p>
+              Data Kegitan
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?= base_url('inventaris_pinjam') ?>" class="nav-link <?= ($this->uri->segment(1) == 'inventaris_pinjam') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Peminjaman barang</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?= base_url('perbaikan_barang') ?>" class="nav-link <?= ($this->uri->segment(1) == 'perbaikan_barang') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Perbaikan barang</p>
+              </a>
+            </li>
+            
+            <li class="nav-item">
+              <a href="<?= base_url('Pemusnahan_barang') ?>" class="nav-link <?= ($this->uri->segment(1) == 'Pemusnahan_barang') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pemusnahan barang</p>
+              </a>
+            </li>
+            <!-- <li class="nav-item">
+              <a href="<?= base_url('opname') ?>" class="nav-link <?= ($this->uri->segment(1) == 'opname') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Opname barang</p>
+              </a>
+            </li> -->
+          </ul>
+        </li>
+        <?php endif ?>
+       
         <li class="nav-item tmenu-open">
           <a href="#" class="nav-link tactive">
             <i class="nav-icon fas fa-print"></i>
@@ -121,49 +192,49 @@
             <li class="nav-item">
               <a href="#" class="nav-link tactive">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Cabang</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Departemen</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
                 <p>Karyawan</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Barang</p>
+                <p>Peminjaman Barang</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Perbaikan Barang</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pemusnahan Barang</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link tactive">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Inventaris yang dipinjam</p>
+                <p>Pengembalian barang</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Perbaikan barang</p>
+                <p>Perbaikan barang selesai</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Vendor</p>
+                <p>Stok Opname</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Pemusnahan barang</p>
+                <p>Stok Masuk</p>
               </a>
             </li>
           </ul>

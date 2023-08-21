@@ -112,39 +112,55 @@
                           </div>
                       </div>
                   </form>
-                  <!-- <?php foreach ($departemen as $no => $d) : ?>
-          <form action="<?= base_url('departemen/edit') ?>" method="post">
-            <div class="modal fade" id="edit_data<?= $c->id_departemen ?>">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Edit <?= $title ?></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="row">
-                    <div class="col-lg-6">
-                          <label for="">Nama Departemen</label>
-                          <input type="text" class="form-control" name="nama_departemen" value="<?= $d->nama_departemen ?>">
+                  <?php foreach ($barang as $no => $b) : ?>
+                    <form action="<?= base_url('barang/edit') ?>" method="post">
+                        <div class="modal fade" id="edit_data<?= $b->id_barang ?>">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Edit <?= $title ?></h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                 <div class="row">
+                                          <div class="col-lg-4">
+                                              <label for="">Kode barang</label>
+                                              <input type="text" class="form-control" name="kode_barang" readonly value="<?= $b->kode ?>">
+                                              <input type="text" class="form-control" name="urutan" readonly value="<?= $b->urutan ?>">
+                                          </div>
+                                          <div class="col-lg-4">
+                                              <label for="">Nama barang</label>
+                                              <input type="text" class="form-control" name="nm_barang" value="<?= $b->nm_barang ?>">
+                                          </div>
+                                          <div class="col-lg-4">
+                                              <label for="">Harga</label>
+                                              <input type="text" class="form-control" name="harga" value="<?= $b->harga ?>">
+                                          </div>
+                                          <div class="col-lg-4 mt-2">
+                                              <label for="">Stok Awal</label>
+                                              <input type="text" class="form-control" name="stok" value="<?= $b->stok ?>">
+                                          </div>
+                                          <div class="col-lg-4 mt-2">
+                                            <label for="">Foto</label>
+                                              <img id="previewFoto" src="" alt="Preview Foto" style="max-width: 100%; max-height: 200px; display: none;">
+                                              <input type="file" class="form-control" name="foto" id="inputFoto">
+                                              <input type="hidden" class="form-control" name="foto_2" value="<?= $b->image ?>">
+                                          </div>
+
+
+                                      </div>
+                                <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-6">
-                          <label for="">Lokasi</label>
-                          <input type="text" class="form-control" name="alamat" value="<?= $d->lokasi ?>">
-                          <input type="hidden" class="form-control" name="id_departemen" value="<?= $d->id_departemen ?>">
                         </div>
-                      </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </form>
-          <?php endforeach ?> -->
+                        </div>
+                    </form>
+                    <?php endforeach ?>
 
                   <!-- /.col-md-6 -->
               </div>
