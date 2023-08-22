@@ -26,7 +26,7 @@
                       <div class="card">
                           <div class="card-header">
                               <h6 class="float-left"><?= $title ?></h6>
-                              <a href="" class="btn btn-primary btn-sm float-right"><i class="fas fa-print"></i> Print</a>
+                              <a href="<?= base_url('Laporan/karyawan_print') ?>" class="btn btn-primary btn-sm float-right"><i class="fas fa-print"></i> Print</a>
                           </div>
                           <div class="card-body">
                               <table id="example2" class="table table-bordered table-striped">
