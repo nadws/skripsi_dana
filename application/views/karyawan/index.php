@@ -50,7 +50,7 @@
                         <td><?= $c->nik ?></td>
                         <td><?= $c->nm_karyawan ?></td>
                         <td><?= $c->nm_level ?></td>
-                        <td><?=date('d-m-Y',strtotime($c->tgl_lahir))  ?></td>
+                        <td><?= date('d-m-Y', strtotime($c->tgl_lahir))  ?></td>
                         <td><?= $c->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' ?></td>
                         <td>
                           <?php $lahir    = new DateTime($c->tgl_bergabung);
