@@ -60,8 +60,8 @@
   });
   <?php if ($this->session->flashdata('success')) : ?>
         Swal.fire({
-            // toast: true,
-            position: 'center',
+            toast: true,
+            position: 'top-right',
             showConfirmButton: false,
             timer: 3000,
             icon: 'success',
@@ -70,8 +70,8 @@
     <?php endif; ?>
   <?php if ($this->session->flashdata('error')) : ?>
         Swal.fire({
-            // toast: true,
-            position: 'center',
+            toast: true,
+            position: 'top-right',
             showConfirmButton: false,
             timer: 3000,
             icon: 'error',

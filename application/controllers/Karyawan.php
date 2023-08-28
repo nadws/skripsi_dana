@@ -54,12 +54,22 @@ class Karyawan extends CI_Controller
         ];
 
         $this->db->insert('karyawan', $data);
+
+        $level = $this->input->post('id_level_karyawan');
+        if ($level == '6') {
+           $role = '1';
+        }elseif($level == '8'){
+            $role = '2';
+        }else{
+            $role = '3';
+        }
+        
         $data = array(
             'nama' => $this->input->post('nm_karyawan'),
             'username' => $this->input->post('nik'),
             'image' => 'default.png',
             'password' => password_hash($this->input->post('nik'), PASSWORD_DEFAULT),
-            'id_role' => 2,
+            'id_role' => $role,
             'is_active' => 1
         );
         
@@ -81,9 +91,12 @@ class Karyawan extends CI_Controller
 
     public function delete()
     {
-        $this->db->where('id_departemen', $this->input->get('id_departemen'));
-        $this->db->delete('departemen');
+        $this->db->where('nik', $this->input->get('nik'));
+        $this->db->delete('karyawan');
+
+        $this->db->where('username', $this->input->get('nik'));
+        $this->db->delete('user');
         $this->session->set_flashdata('success', 'Berhasil dihapus');
-        redirect('departemen');
+        redirect('karyawan');
     }
 }

@@ -1,0 +1,1 @@
+<image src="<?= base_url('assets/') ?>lampiran_pinjam/<?= $lampiran->lampiran ?>" width="100%"></image>

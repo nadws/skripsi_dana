@@ -43,44 +43,25 @@ class Barang extends CI_Controller
             $kode_barang = $kode->urutan_kode + 1;
         }
         
-        $config['upload_path'] = './assets/barang/'; // Ganti dengan path folder upload sesuai dengan struktur folder Anda
-        $config['allowed_types'] = 'gif|jpg|png'; // Jenis file yang diizinkan untuk diunggah (sesuaikan sesuai kebutuhan)
-        $config['max_size'] = 10000; // Ukuran maksimum file dalam kilobyte (KB)
-
-        $this->load->library('upload', $config);
-
-        if (!$this->upload->do_upload('foto')) {
-            // Jika proses upload gagal, tangani kesalahan (misalnya menampilkan pesan error)
-            $error = array('error' => $this->upload->display_errors());
-            print_r($error);
-        } else {
-            // Jika proses upload berhasil, ambil data tentang gambar yang diunggah
-            $upload_data = $this->upload->data();
-
-            // Lakukan sesuatu dengan data gambar yang diunggah (misalnya menyimpan informasi file ke database)
-            $file_name = $upload_data['file_name']; // Nama file yang diunggah
-            $file_type = $upload_data['file_type']; // Tipe file (ekstensi)
-            $file_size = $upload_data['file_size']; // Ukuran file dalam byte
-
-            $data = array(
-                'kode' => $this->input->post('kode_barang'),
-                'nm_barang' => $this->input->post('nm_barang'),
-                'harga' => $this->input->post('harga'),
-                'stok' => $this->input->post('stok'),
-                'image' => $file_name, // Simpan nama file ke kolom 'foto'
-                'urutan' => $kode_barang
-            );
-            $this->db->insert('barang', $data);
-            $data = [
-                'kode_barang' => $this->input->post('kode_barang'),
-                'masuk' => $this->input->post('stok'),
-                'keluar' => '0',
-                'ket' => 'Stok awal'
-            ];
-            $this->db->insert('stok', $data);
-            $this->session->set_flashdata('success', 'Berhasil disimpan');
-            redirect('barang');
-        }
+        $data = array(
+            'kode' => $this->input->post('kode_barang'),
+            'nm_barang' => $this->input->post('nm_barang'),
+            'harga' => $this->input->post('harga'),
+            'stok' => $this->input->post('stok'),
+            'urutan' => $kode_barang
+        );
+        $this->db->insert('barang', $data);
+        $data = [
+            'kode_barang' => $this->input->post('kode_barang'),
+            'masuk' => $this->input->post('stok'),
+            'keluar' => '0',
+            'ket' => 'Stok awal'
+        ];
+        $this->db->insert('stok', $data);
+        $this->session->set_flashdata('success', 'Berhasil disimpan');
+        redirect('barang');
+            
+        
     }
     public function edit()
     {

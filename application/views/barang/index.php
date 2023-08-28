@@ -49,11 +49,8 @@
                                               <td><?= $c->nm_barang ?></td>
                                               <td align="right"><?= $c->masuk - $c->keluar ?></td>
                                               <td align="right">Rp. <?= number_format($c->harga, 0) ?></td>
-                                              <!-- <td align="center">
-                                                  <a target="_blank" href="<?= base_url("assets/barang/$c->image") ?>"><img src="<?= base_url("assets/barang/$c->image") ?>" alt="" width="80px"></a>
-                                              </td> -->
                                               <td align="center">
-                                                  <a href="#" data-toggle="modal" data-target="#view_data<?= $c->id_barang ?>" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
+                                                  <!-- -->
                                                   <a href="#" data-toggle="modal" data-target="#edit_data<?= $c->id_barang ?>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
                                                   <a href="<?= base_url("karyawan/delete?id_karyawan=$c->id_barang") ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                                               </td>
@@ -67,7 +64,7 @@
 
                   </div>
 
-                  <form action="<?= base_url('barang/add') ?>" method="post" enctype="multipart/form-data">
+                  <form action="<?= base_url('barang/add') ?>" method="post">
                       <div class="modal fade" id="tambah_data">
                           <div class="modal-dialog modal-lg">
                               <div class="modal-content">
@@ -95,11 +92,11 @@
                                               <label for="">Stok Awal</label>
                                               <input type="text" class="form-control" name="stok">
                                           </div>
-                                          <div class="col-lg-4 mt-2">
+                                          <!-- <div class="col-lg-4 mt-2">
                                             <label for="">Foto</label>
                                               <img id="previewFoto" src="" alt="Preview Foto" style="max-width: 100%; max-height: 200px; display: none;">
                                               <input type="file" class="form-control" name="foto" id="inputFoto">
-                                          </div>
+                                          </div> -->
 
 
                                       </div>

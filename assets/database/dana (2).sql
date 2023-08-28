@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Waktu pembuatan: 21 Agu 2023 pada 22.17
+-- Waktu pembuatan: 28 Agu 2023 pada 22.23
 -- Versi server: 8.0.30
 -- Versi PHP: 7.4.33
 
@@ -43,8 +43,7 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`kode`, `id_barang`, `nm_barang`, `kategori`, `harga`, `stok`, `image`, `urutan`) VALUES
-('BR-1001', 7, 'Lemari', 0, 400000, 5, '7.jpg', 1001),
-('BR-1002', 8, 'Teleskop', 0, 1000000, 11, '3.jpg', 1002);
+('BR-1001', 9, 'Lemari', 0, 10000000, 2, '', 1001);
 
 -- --------------------------------------------------------
 
@@ -104,9 +103,11 @@ CREATE TABLE `inventaris_dipinjam` (
   `tgl_kembali` date NOT NULL,
   `id_peminjam` int NOT NULL,
   `nik` varchar(125) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `id_cabang` int NOT NULL,
   `nota_peminjaman` varchar(100) NOT NULL,
   `status_pinjam` enum('dipinjam','kembali') NOT NULL,
-  `ket` enum('pengajuan','setuju') NOT NULL,
+  `ket` enum('pengajuan','setuju','tidak_setuju') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `lampiran` varchar(100) NOT NULL,
   `admin` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -114,8 +115,9 @@ CREATE TABLE `inventaris_dipinjam` (
 -- Dumping data untuk tabel `inventaris_dipinjam`
 --
 
-INSERT INTO `inventaris_dipinjam` (`id_peminjaman_inv`, `kode_barang`, `qty`, `tgl_pinjam`, `tgl_kembali`, `id_peminjam`, `nik`, `nota_peminjaman`, `status_pinjam`, `ket`, `admin`) VALUES
-(2, 'BR-1001', 3, '2023-08-18', '0000-00-00', 0, 'KRY-5001', '', 'dipinjam', 'setuju', 'KRY-5001');
+INSERT INTO `inventaris_dipinjam` (`id_peminjaman_inv`, `kode_barang`, `qty`, `tgl_pinjam`, `tgl_kembali`, `id_peminjam`, `nik`, `id_cabang`, `nota_peminjaman`, `status_pinjam`, `ket`, `lampiran`, `admin`) VALUES
+(3, 'BR-1001', 1, '2023-08-26', '2023-09-26', 0, 'KRY-5001', 2, '', 'dipinjam', 'tidak_setuju', '', 'KRY-5002'),
+(4, 'BR-1001', 2, '2023-08-28', '2023-09-09', 0, 'KRY-5001', 2, '', 'dipinjam', 'setuju', 'undangan_2.png', 'KRY-5002');
 
 -- --------------------------------------------------------
 
@@ -142,7 +144,8 @@ CREATE TABLE `karyawan` (
 --
 
 INSERT INTO `karyawan` (`id_karyawan`, `nik`, `id_level_karyawan`, `nm_karyawan`, `jenis_kelamin`, `tgl_lahir`, `alamat`, `id_departemen`, `foto`, `tgl_bergabung`, `urutan`) VALUES
-(4, 'KRY-5001', 1, 'Nanda Wahyudi', 'L', '1997-08-01', 'JL tembikar kanan', 1, 'default.png', '2023-02-16', 5001);
+(6, 'KRY-5001', 8, 'Nanda Wahyudi', 'L', '2023-08-26', 'Testing', 1, 'default.png', '2023-08-26', 5001),
+(7, 'KRY-5002', 7, 'RIzal', 'L', '2023-08-26', 'GAS', 1, 'default.png', '2023-08-26', 5002);
 
 -- --------------------------------------------------------
 
@@ -171,9 +174,9 @@ CREATE TABLE `level_karyawan` (
 --
 
 INSERT INTO `level_karyawan` (`id_level_karyawan`, `nm_level`) VALUES
-(1, 'Manajer'),
-(2, 'Supervisior'),
-(3, 'Staff');
+(6, 'Super admin'),
+(7, 'Admin GA'),
+(8, 'Manajer');
 
 -- --------------------------------------------------------
 
@@ -192,14 +195,6 @@ CREATE TABLE `opname` (
   `urutan` int NOT NULL,
   `ket` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data untuk tabel `opname`
---
-
-INSERT INTO `opname` (`id_opname`, `no_nota_opname`, `kode_barang`, `qty_program`, `qty_aktual`, `tgl`, `admin`, `urutan`, `ket`) VALUES
-(11, 'OPNM-1001', 'BR-1002', 8, 7, '2023-08-21', 'Admin', 1001, 'hilang 1'),
-(12, 'OPNM-1001', 'BR-1001', 0, 1, '2023-08-21', 'Admin', 1001, 'digudang ada 1');
 
 -- --------------------------------------------------------
 
@@ -227,9 +222,20 @@ CREATE TABLE `perbaikan_barang` (
   `qty` double NOT NULL,
   `ket` varchar(125) NOT NULL,
   `tgl_perbaikan` date NOT NULL,
-  `tgl_selesai` int NOT NULL,
-  `status` enum('belum selesai','selesai') NOT NULL
+  `tgl_selesai` date NOT NULL,
+  `status` enum('pengajuan','diperbaiki','ditolak','rusak') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `dari` enum('1','2') NOT NULL,
+  `id_cabang` int DEFAULT '0',
+  `id_vendor` int NOT NULL,
+  `lampiran` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data untuk tabel `perbaikan_barang`
+--
+
+INSERT INTO `perbaikan_barang` (`id_perbaikan_barang`, `kode_barang`, `qty`, `ket`, `tgl_perbaikan`, `tgl_selesai`, `status`, `dari`, `id_cabang`, `id_vendor`, `lampiran`) VALUES
+(4, 'BR-1001', 2, 'rusak dibagian atas', '2023-08-30', '0000-00-00', 'pengajuan', '1', 0, 1, 'undangan.jpg');
 
 -- --------------------------------------------------------
 
@@ -243,25 +249,17 @@ CREATE TABLE `stok` (
   `masuk` double NOT NULL,
   `keluar` double NOT NULL,
   `ket` varchar(110) NOT NULL,
-  `opname` enum('T','Y') NOT NULL
+  `opname` enum('T','Y') NOT NULL,
+  `id_cabang` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data untuk tabel `stok`
 --
 
-INSERT INTO `stok` (`id_stok`, `kode_barang`, `masuk`, `keluar`, `ket`, `opname`) VALUES
-(4, 'BR-1001', 5, 0, 'Stok awal', 'T'),
-(5, 'BR-1001', 0, 5, 'Peminjaman', 'T'),
-(6, 'BR-1001', 5, 0, 'pengembalian peminjaman', 'T'),
-(7, 'BR-1002', 11, 0, 'Stok awal', 'T'),
-(8, 'BR-1002', 0, 3, 'Pemusnahan', 'T'),
-(9, 'BR-1001', 0, 2, 'Peminjaman', 'T'),
-(10, 'BR-1001', 0, 3, 'Peminjaman', 'T'),
-(14, 'BR-1002', 0, 1, 'opname', 'Y'),
-(15, 'BR-1001', 1, 0, 'opname', 'Y'),
-(16, 'BR-1002', 5, 0, 'stok_masuk', 'T'),
-(17, 'BR-1001', 3, 0, 'stok_masuk', 'T');
+INSERT INTO `stok` (`id_stok`, `kode_barang`, `masuk`, `keluar`, `ket`, `opname`, `id_cabang`) VALUES
+(20, 'BR-1001', 2, 0, 'Stok awal', 'T', 0),
+(21, 'BR-1001', 0, 2, 'Peminjaman', 'T', 0);
 
 -- --------------------------------------------------------
 
@@ -279,14 +277,6 @@ CREATE TABLE `stok_masuk` (
   `no_nota_masuk` varchar(100) NOT NULL,
   `admin` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data untuk tabel `stok_masuk`
---
-
-INSERT INTO `stok_masuk` (`id_stok_masuk`, `tgl`, `kode_barang`, `qty`, `qty_sebelum`, `urutan`, `no_nota_masuk`, `admin`) VALUES
-(1, '2023-08-21', 'BR-1002', 5, 7, 1002, 'STKM-1001', 'Admin'),
-(2, '2023-08-21', 'BR-1001', 3, 1, 1002, 'STKM-1001', 'Admin');
 
 -- --------------------------------------------------------
 
@@ -311,7 +301,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id_user`, `username`, `nama`, `password`, `id_role`, `is_active`, `email`, `image`) VALUES
 (1, 'Admin', 'admin', '$2y$10$VQcGKHiC21omQwWRYXNrpeAMsAt7V8jQq1iyw46OinjBQQ5qHx0Jy', 1, 1, '', 'user1.png'),
-(16, 'KRY-5001', 'Nanda Wahyudi', '$2y$10$qdQTIYsJVux7XbmfI8F6ruiEF/pWLyRaN.puJtE7Z2.CfafD2sRZy', 2, 1, NULL, 'user1.png');
+(18, 'KRY-5001', 'Nanda Wahyudi', '$2y$10$MF6NZ1RAUlihD0J9271RJu7Pj5rNHw9FazUzs6PFDLq9LBfULK.Da', 2, 1, NULL, 'default.jpg'),
+(19, 'KRY-5002', 'RIzal', '$2y$10$ejW0yhFugW6WQdIMhVt9z.uEY/Qm2AT9vx5stwDW8SDSx9jGajI6.', 3, 1, NULL, 'default.jpg');
 
 -- --------------------------------------------------------
 
@@ -430,7 +421,7 @@ ALTER TABLE `vendor`
 -- AUTO_INCREMENT untuk tabel `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `id_barang` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_barang` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `cabang`
@@ -448,13 +439,13 @@ ALTER TABLE `departemen`
 -- AUTO_INCREMENT untuk tabel `inventaris_dipinjam`
 --
 ALTER TABLE `inventaris_dipinjam`
-  MODIFY `id_peminjaman_inv` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_peminjaman_inv` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
-  MODIFY `id_karyawan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_karyawan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `kategori`
@@ -466,7 +457,7 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT untuk tabel `level_karyawan`
 --
 ALTER TABLE `level_karyawan`
-  MODIFY `id_level_karyawan` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_level_karyawan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `opname`
@@ -478,19 +469,19 @@ ALTER TABLE `opname`
 -- AUTO_INCREMENT untuk tabel `pemusnahan_barang`
 --
 ALTER TABLE `pemusnahan_barang`
-  MODIFY `id_pemusnahan_barang` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pemusnahan_barang` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `perbaikan_barang`
 --
 ALTER TABLE `perbaikan_barang`
-  MODIFY `id_perbaikan_barang` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_perbaikan_barang` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `stok`
 --
 ALTER TABLE `stok`
-  MODIFY `id_stok` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_stok` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT untuk tabel `stok_masuk`
@@ -502,7 +493,7 @@ ALTER TABLE `stok_masuk`
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT untuk tabel `vendor`

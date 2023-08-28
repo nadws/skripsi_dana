@@ -63,7 +63,7 @@
                         <td><?= $c->nama_departemen ?></td>
                         <td>
                           <a href="#" data-toggle="modal" data-target="#edit_data<?= $c->id_karyawan ?>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                          <a href="<?= base_url("karyawan/delete?id_karyawan=$c->id_karyawan") ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                          <a href="<?= base_url("karyawan/delete?nik=$c->nik") ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                         </td>
                       </tr>
                     <?php endforeach ?>

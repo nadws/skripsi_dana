@@ -19,6 +19,7 @@
       </div>
       <div class="info">
         <a href="#" class="d-block"><?= $user->nama ?></a>
+        <p class="text-white">(<?= $user->id_role == '1' ? 'Admin' : ($user->id_role == '2' ? 'Manajer' : 'Admin Ga') ?>)</p>
       </div>
     </div>
 
@@ -40,7 +41,7 @@
             </p>
           </a>
         </li>
-        <?php $menu1 = ['cabang', 'departemen', 'barang','vendor','level_karyawan'] ?>
+        <?php $menu1 = ['cabang', 'departemen', 'barang','vendor','level_karyawan','karyawan'] ?>
         <?php if($this->session->userdata('id_role') == '1'): ?>
           <li class="nav-item  <?= (in_array($this->uri->segment(1), $menu1)) ? 'menu-open' : ''; ?>">
           <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu1)) ? 'active' : ''; ?>">
@@ -70,6 +71,12 @@
               </a>
             </li>
             <li class="nav-item">
+              <a href="<?= base_url('karyawan') ?>" class="nav-link <?= ($this->uri->segment(1) == 'karyawan') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Karyawan</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="<?= base_url('barang') ?>" class="nav-link <?= ($this->uri->segment(1) == 'barang') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Barang</p>
@@ -87,8 +94,8 @@
         <?php endif ?>
 
        
-        <?php $menu2 = ['inventaris_pinjam','perbaikan_barang','karyawan','Pemusnahan_barang','opname','stok_masuk'] ?>
-        <?php if($this->session->userdata('id_role') == '1'): ?>
+        <?php $menu2 = ['inventaris_pinjam','perbaikan_barang','Pemusnahan_barang','opname','stok_masuk'] ?>
+        <?php if($this->session->userdata('id_role') == '2'): ?>
           <li class="nav-item <?= (in_array($this->uri->segment(1), $menu2)) ? 'menu-open' : ''; ?>">
           <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu2)) ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-clipboard-list"></i>
@@ -98,12 +105,7 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?= base_url('karyawan') ?>" class="nav-link <?= ($this->uri->segment(1) == 'karyawan') ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Karyawan</p>
-              </a>
-            </li>
+            
             <li class="nav-item">
               <a href="<?= base_url('inventaris_pinjam') ?>" class="nav-link <?= ($this->uri->segment(1) == 'inventaris_pinjam') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
@@ -141,6 +143,7 @@
             </li>
           </ul>
         </li>
+        <?php elseif($this->session->userdata('id_role') == '1'): ?>
         <?php else: ?>
           <li class="nav-item <?= (in_array($this->uri->segment(1), $menu2)) ? 'menu-open' : ''; ?>">
           <a href="#" class="nav-link <?= (in_array($this->uri->segment(1), $menu2)) ? 'active' : ''; ?>">
@@ -239,7 +242,9 @@
             </li>
           </ul>
         </li>
+        
         <hr>
+        
         <li class="nav-item">
           <a href="<?= base_url('auth/logout') ?>" class="nav-link ">
             <i class="nav-icon fas fa-sign-out-alt"></i>
